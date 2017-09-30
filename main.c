@@ -28,40 +28,44 @@ struct DIBhead{
 
 int main(char args[]){
 
-    struct BMPhead bmphead;
-    struct DIBhead dibhead;
+    struct BMPhead, bmphead;
+    struct DIBhead, dibhead;
     FILE *img;
-
-    img = fopen(args, 'r');
+    unsigned char *bmpImage;
+    
+    img = fopen(args, "rb");
 
     fread(&bmphead, sizeof(bmphead), 1, img);
 
-    if(bmphead.format != 19778)
-    {
+    if(bmphead.format != 19778){
         printf("Unsupported file type, you may try again.");
         return 0;
-    }
+    }else{
 
     fread(&dibhead, sizeof(dibhead), 1, img);
-
-    if(dibhead.headSize != 40){
-        printf("Unsupported file type, you may try again.");
-        return 0;
     }
     
-     if(dibhead.bCount != 24){
+    if(dibhead.headSize != MODDDDDD){
+        printf("Unsupported file type, you may try again.");
+        return 0;
+    }else if(dibhead.bCount != MODDDDDD){
         printf("Unsupported file type, you may try again. ");
         return 0;
-    }
+    }else
 
     fseek(img, bmphead.Offset, SEEK_SET);
-
-    unsigned char *bmpImage = (unsigned char*)malloc(dibhead.imageSize);
+   
+    bmpImage = (unsigned char*)malloc(dibhead.imageSize);
 
     fread(bmpImage, sizeOf(unsigned int), dibhead.imageSize, img);
     
-    bmpImage = ~bmpImage;
-
+    int i = 0;
+    for(i =0;; i<sizeof(bmpImage); i++){
+    bmpImage[i] = (unsigned char) (~bmpImage[i]);
+    }
+        
     fseek(img, bmhhead.Offset, SEEK_SET);
     fwrite(bmpImage, dibhead->imageSize, img);
+    
+    return 0;
 }
